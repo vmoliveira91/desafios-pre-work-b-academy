@@ -10,5 +10,5 @@ const link = document.querySelector('[data-js="link"]')
 link.addEventListener("click", (event) => {
   event.preventDefault()
   const element = document.querySelector('[data-js="app"]')
-  element.hidden = !element.hidden
+  element.classList.toggle('hide')
 }, false)
