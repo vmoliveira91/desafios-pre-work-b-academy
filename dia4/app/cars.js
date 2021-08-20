@@ -1,7 +1,6 @@
 async function getCars(url) {
     const response = await fetch(url, {
         method: 'GET',
-        //mode: 'cors',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -11,7 +10,6 @@ async function getCars(url) {
 
 const cars = await getCars('http://localhost:3333/cars')
     .then((result) => result.ok && result.json())
-    .then((result) => result)
 
 const propriedades = ['image', 'brandModel', 'year', 'plate', 'color']
 
