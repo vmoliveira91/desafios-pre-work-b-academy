@@ -22,38 +22,21 @@ inputNome.addEventListener('input', (e) => {
     e.target.value = palavrasFormatadas.join(' ')
 })
 
-const form = document.querySelector('[data-js="form"]')
+const form = document.querySelector('[data-js="form-nome"]')
 
 form.appendChild(document.createElement('hr'))
 
 const select = document.createElement('select')
 select.multiple = true
 
-const option1 = document.createElement('option')
-option1.value = 'blue'
-option1.textContent = 'Blue'
+const cores = ['blue', 'green', 'red', 'pink', 'purple']
 
-const option2 = document.createElement('option')
-option2.value = 'green'
-option2.textContent = 'Green'
-
-const option3 = document.createElement('option')
-option3.value = 'red'
-option3.textContent = 'Red'
-
-const option4 = document.createElement('option')
-option4.value = 'pink'
-option4.textContent = 'Pink'
-
-const option5 = document.createElement('option')
-option5.value = 'purple'
-option5.textContent = 'Purple'
-
-select.appendChild(option1)
-select.appendChild(option2)
-select.appendChild(option3)
-select.appendChild(option4)
-select.appendChild(option5)
+cores.forEach((cor) => {
+    const option = document.createElement('option')
+    option.value = cor
+    option.textContent = cor
+    select.appendChild(option)
+})
 
 form.appendChild(select)
 
