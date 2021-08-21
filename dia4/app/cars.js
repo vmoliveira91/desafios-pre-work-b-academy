@@ -20,11 +20,22 @@ if(cars.length === 0) {
 } else {
     cars.forEach((car) => {
         const tr = document.createElement('tr')
+
         propriedades.forEach((propriedade) => {
             const td = document.createElement('td')
             td.textContent = car[propriedade]
             tr.appendChild(td)
         })
+
+        const field = document.createElement('td')
+        const button = document.createElement('button')
+        
+        button.value = car['plate']
+        button.textContent = 'Deletar'
+        button.classList.add('delete')
+        
+        field.appendChild(button)
+        tr.appendChild(field)
         tbody.appendChild(tr)
     })
 }
@@ -81,7 +92,55 @@ form.addEventListener('submit', async (e) => {
                 row.appendChild(field)
             }        
         })
+
+        const field = document.createElement('td')
+        const button = document.createElement('button')
+
+        button.value = elements[3].value
+        button.textContent = 'Deletar'
+        button.classList.add('delete')
+
+        button.addEventListener('click', async (e) => {
+            e.preventDefault
+
+            const plate = e.target.value
+            
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    plate: plate,
+                })
+            })
+            .then((result) => result.json())
+
+            if(response.message === `O carro com placa ${plate} foi removido com sucesso`) {
+                const row = e.target.parentElement.parentElement
+                row.innerHTML = ''
+            }
+
+            const cars = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then((result) => result.json())
         
+            const tbody = document.querySelector('[data-js="table-body"]')
+            
+            if(cars.length === 0) {
+                const tr = document.createElement('tr')
+                tr.textContent = 'Nenhum carro encontrado'
+                tr.classList.add('empty')
+                tbody.appendChild(tr)
+            }
+        })
+        
+        field.appendChild(button)
+        row.appendChild(field)
         table.appendChild(row)
         
         e.target.reset()
@@ -89,4 +148,47 @@ form.addEventListener('submit', async (e) => {
         const imgInput = e.target.elements['image']
         imgInput.focus()       
     }    
+})
+
+const buttons = [...document.querySelectorAll('button.delete')]
+
+buttons.forEach((button) => {
+    button.addEventListener('click', async (e) => {
+        e.preventDefault
+
+        const plate = e.target.value
+        
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                plate: plate,
+            })
+        })
+        .then((result) => result.json())
+
+        if(response.message === `O carro com placa ${plate} foi removido com sucesso`) {
+            const row = e.target.parentElement.parentElement
+            row.innerHTML = ''
+        }
+
+        const cars = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then((result) => result.json())
+    
+        const tbody = document.querySelector('[data-js="table-body"]')
+        
+        if(cars.length === 0) {
+            const tr = document.createElement('tr')
+            tr.textContent = 'Nenhum carro encontrado'
+            tr.classList.add('empty')
+            tbody.appendChild(tr)
+        }
+    })
 })
