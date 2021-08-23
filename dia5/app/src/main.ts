@@ -29,8 +29,8 @@ const url = 'http://localhost:3333/cars'
 const form = document.querySelector<HTMLDivElement>('[data-js="cars-form"]')!
 const table = document.querySelector<HTMLDivElement>('[data-js="table"]')!
 
-const getFormElement = (event) => (elementName: string) => {
-  return event.target.elements[elementName]
+const getFormElement = (target: HTMLFormElement) => (elementName: string) => {
+  return target[elementName]
 }
 
 const elementTypes: ElementTypes = {
@@ -71,10 +71,17 @@ function createColor (value: string | Image): HTMLDivElement {
 
 form.addEventListener('submit', async (e: Event) => {
   e.preventDefault()
-  const getElement = getFormElement(e)
+  
+  const target = e.target as HTMLFormElement
 
+  if(!target)
+    return
+
+  const getElement = getFormElement(target)
+  const image = getElement('image')
+  
   const data = {
-    image: getElement('image').value,
+    image: image.value,
     brandModel: getElement('brand-model').value,
     year: getElement('year').value,
     plate: getElement('plate').value,
@@ -95,7 +102,7 @@ form.addEventListener('submit', async (e: Event) => {
 
   createTableRow(data)
 
-  e.target.reset()
+  target.reset()
   image.focus()
 })
 
@@ -127,8 +134,12 @@ function createTableRow (data: Car) {
   table.appendChild(tr)
 }
 
-async function handleDelete (e) {
-  const button = e.target
+async function handleDelete (e: Event) {
+  const button = e.target as HTMLButtonElement
+
+  if(!button)
+    return
+
   const plate = button.dataset.plate
   
   const result = await del(url, JSON.stringify({ plate }))
